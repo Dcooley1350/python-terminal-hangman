@@ -1,7 +1,7 @@
 import random
 from check_word import check_word
 from words import words
-import display
+import display, hangman_art
 import os
 
 max_turns = 2
@@ -12,13 +12,18 @@ game_status = []
 for n in range(len(chosen_word)):
     game_status += "_"
 
-print(chosen_word)
+print(hangman_art.logo + "\n")
+input("Let's Play Hangman!\n")
+
 # Begin game loop
-turn_count = 0
+remaining_attempts = 7
 game_on = True
 while game_on:
+    # Clear console
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("Let's Play Hangman!\n")
+
+    # Display game status
+    print(hangman_art.stages[remaining_attempts - 1])
     display.display_game_status(game_status)
     print("\n")
 
@@ -36,14 +41,14 @@ while game_on:
         for index in indexes:
             game_status[index] = guess
     else:
-        turn_count += 1
+        remaining_attempts -= 1
         input(f"There are NOT any {guess}'s.")
 
     # Check for end game scenario
     if not "_" in game_status:
         print("You win!")
         game_on = False
-    elif turn_count >= max_turns:
+    elif  remaining_attempts <= 0:
         print("Too bad! You lose!")
         game_on = False
 
